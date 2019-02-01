@@ -1,0 +1,61 @@
+options:
+  vlan-ranges:
+    type: string
+    default: "default:1000:2000"
+    description: |
+      Space-delimited list of Neutron network-provider & vlan-id-ranges using
+      the following format "<provider>:<start>:<end> ...".
+  overlay-network-type:
+    default: vxlan
+    type: string
+    description: |
+      Overlay network types to use, valid options include:
+      .
+      vxlan
+      .
+      Multiple types can be provided in the future - field is space delimited.
+  security-groups:
+    default: false
+    type: boolean
+    description: Enable OVS managed security groups.
+
+  mechanism_drivers:
+    default: nuage
+    type: string
+    default: |
+      Nuage mechinism drivers you want to enable
+  vsd-cms-id:
+    type: string
+    default:
+    description: |
+      CMS ID is used as an authentication token from VSD to CMS.
+      This value is being generated via nuage scripts and can be set pre/post
+      deployment.
+  vsd-server:
+    type: string
+    default:
+    description: Nuage VSD Server
+  vsd-auth:
+    type: string
+    default: "csproot:csproot"
+    description: Username Password to connect to Nuage VSD Server
+  vsd-organization:
+    type: string
+    default: csp
+    description: Name of the organization in Nuage VSD
+  vsd-auth-ssl:
+    type: boolean
+    default: True
+    description: SSL authentication of the Nuage VSD Server
+  vsd-base-uri:
+    type: string
+    default: "/nuage/api/v5_0"
+    description: Nuage VSD API endpoint URI
+  vsd-auth-resource:
+    type: string
+    default: "/me"
+    description: Nuage VSD authentication resource
+  vsd-netpart-name:
+    type: string
+    default: juju-enterprise
+    description: Name of the Organization or Enterprise to create in Nuage VSD

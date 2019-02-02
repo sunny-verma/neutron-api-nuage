@@ -8,11 +8,13 @@ import charms_openstack.adapters
 from charmhelpers.fetch import (
     apt_install,
     add_source,
+    apt_update,
 )
 
 ML2_CONF = '/etc/neutron/plugins/ml2_conf.ini'
 VXLAN = 'vxlan'
 NUAGE_PACKAGES = ['nuage-openstack-neutron', 'nuage-openstack-neutronclient']
+
 
 class NeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
 
@@ -20,7 +22,7 @@ class NeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
     service_name = name = 'neutron-api-nuage'
 
     # First release supported
-    release = 'Queens'
+    release = 'queens'
 
     # List of packages to install for this charm
     packages = NUAGE_PACKAGES
@@ -55,8 +57,7 @@ class NeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
         '''
         Install hook is run when the charm is first deployed on a node.
         '''
-        configure_sources(config('nuage-extra-source'), config('nuage-extra-key'))
-        status_set('maintenance', 'Installing apt packages')
+        add_source(hookenv.config('extra-source'), hookenv.config('extra-key'))
         apt_update()
         pkgs =NUAGE_PACKAGES
         for pkg in pkgs:

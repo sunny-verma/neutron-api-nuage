@@ -11,8 +11,8 @@ series:
   - trusty
   - yakkety
 provides:
-  neutron-plugin:
-    interface: neutron-plugin
+  neutron-plugin-api-subordinate:
+    interface: neutron-plugin-api-subordinate
     scope: container
 requires:
   container:

@@ -1,4 +1,6 @@
 options:
+
+# Package information
   extra-key:
     type: string
     default:
@@ -7,17 +9,14 @@ options:
     type: string
     default:
     description: Optional source for archive containing additional packages.
+## Neutron section
   nuage-service-plugins:
     type: string
     default: 'NuagePortAttributes,NuageAPI,NuageL3'
     description: Nuage Service Plugins 
-  vlan-ranges:
-    type: string
-    default: "default:1000:2000"
-    description: |
-      Space-delimited list of Neutron network-provider & vlan-id-ranges using
-      the following format "<provider>:<start>:<end> ...".
-  overlay-network-type:
+
+## ML2 Section
+  overlay-network-types:
     default: vxlan
     type: string
     description: |
@@ -25,17 +24,58 @@ options:
       .
       vxlan
       .
-      Multiple types can be provided in the future - field is space delimited.
+      Multiple types can be provided in the future - field is comma seperated
+
+  tenant-network-types:
+    default: vxlan
+    type: string
+    description: |
+      Overlay network types to use, valid options include:
+      .
+      vxlan
+      .
+      Multiple types can be provided in the future - field is comma seperated
+
+  vlan-ranges:
+    type: string
+    default: ''
+    description: |
+      Space-delimited list of Neutron network-provider & vlan-id-ranges using
+      the following format "<provider>:<start>:<end> ..." like "default:1000:2000".
+
+  mechanism-drivers:
+    default: nuage
+    type: string
+    description: |
+      Nuage mechanism drivers you want to enable
+      It is 'nuage,nuage_sriov,sriovnicswitch' when you enable sriov
+
+  extension-drivers:
+    default: 'nuage_subnet,nuage_port,port_security'
+    type: string
+    description: |
+      Nuage extentions mechanism drivers you want to enable
+
   security-groups:
     default: false
     type: boolean
     description: Enable OVS managed security groups.
 
-  mechanism_drivers:
-    default: nuage
+  vni-ranges:
+    type: string
+    default: '1001:2000'
+    description: |
+      Space-delimited list of Neutron network-provider & vxlan-vni-ranges using
+      the following format "<start>:<end> ..." like "1000:2000".
+
+  vxlan-group:
+    default: '224.0.0.1'
     type: string
     description: |
-      Nuage mechanism drivers you want to enable
+      Nuage default vxlan group 
+
+#Nuage Section
+
   vsd-cms-id:
     type: string
     default:

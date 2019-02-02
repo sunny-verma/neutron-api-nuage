@@ -25,6 +25,12 @@ charm.use_defaults(
     'update-status')
 
 @reactive.when('neutron-plugin-api-subordinate.connected')
+def render_config(*args):
+    with charm.provide_charm_instance() as neutron_api_nuage_charm:
+        neutron_api_nuage_charm.render_with_interfaces(args)
+        neutron_api_nuage_charm.assess_status()
+
+@reactive.when('neutron-plugin-api-subordinate.connected')
 def configure_plugin(api_principle):
     with charm.provide_charm_instance() as neutron_api_nuage_charm:
         neutron_api_nuage_charm.configure_plugin(api_principle)

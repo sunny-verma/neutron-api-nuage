@@ -1,4 +1,16 @@
 options:
+  extra-key:
+    type: string
+    default:
+    description: Optional key for archive containing additional packages.
+  extra-source:
+    type: string
+    default:
+    description: Optional source for archive containing additional packages.
+  nuage-service-plugins:
+    type: string
+    default: 'NuagePortAttributes,NuageAPI,NuageL3'
+    description: Nuage Service Plugins 
   vlan-ranges:
     type: string
     default: "default:1000:2000"
@@ -22,8 +34,8 @@ options:
   mechanism_drivers:
     default: nuage
     type: string
-    default: |
-      Nuage mechinism drivers you want to enable
+    description: |
+      Nuage mechanism drivers you want to enable
   vsd-cms-id:
     type: string
     default:
@@ -59,11 +71,3 @@ options:
     type: string
     default: juju-enterprise
     description: Name of the Organization or Enterprise to create in Nuage VSD
-  extra-key:
-    type: string
-    default:
-    description: Optional key for archive containing additional packages.
-  extra-source:
-    type: string
-    default:
-    description: Optional source for archive containing additional packages.

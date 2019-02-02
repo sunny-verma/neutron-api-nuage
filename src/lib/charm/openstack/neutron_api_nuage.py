@@ -11,7 +11,7 @@ from charmhelpers.fetch import (
     apt_update,
 )
 
-ML2_CONF = '/etc/neutron/plugins/ml2_conf.ini'
+ML2_CONF = '/etc/neutron/plugins/ml2/ml2_conf.ini'
 VXLAN = 'vxlan'
 NUAGE_PACKAGES = ['nuage-openstack-neutron', 'nuage-openstack-neutronclient']
 
@@ -27,9 +27,12 @@ class NeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
     # List of packages to install for this charm
     packages = NUAGE_PACKAGES
 
-    required_relations = ['neutron-plugin-api-subordinate']
+    restart_map = {ML2_CONF: ['neutron-server']}
+    adapters_class = charms_openstack.adapters.OpenStackRelationAdapters
 
-    service_plugins = 'NuagePortAttributes,NuageAPI,NuageL3'
+    #required_relations = ['neutron-plugin-api-subordinate']
+
+    service_plugins = hookenv.config('nuage-service-plugins')
 
     def configure_plugin(self, api_principle):
         """Add sections and tuples to insert values into neutron-server's
@@ -42,7 +45,7 @@ class NeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
                         'DEFAULT': [
                         ],
                     }
-                }
+                },
             }
         }
 

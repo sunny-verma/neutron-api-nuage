@@ -1,20 +1,20 @@
 name: neutron-api-nuage
-subordinate: true
-maintainer: OpenStack Charmers <openstack-charmers@lists.ubuntu.com>
-summary: Open vSwitch OpenDayLight subordinate charm
-description:
-  Description of this SDN charm
+summary: "Openstack Neutron Nuage Plugin"
+maintainer: "Sunny Verma <sunny.verma@nokia.com>"
+description: |
+  Neutron is a virtual network service for OpenStack, and a part of
+  Netstack.  This charm is used to configure Neutron service inside a
+  Neutron-api Node and communicate to Nuage VSD.
 tags:
   - openstack
 series:
-  - xenial
-  - trusty
-  - yakkety
+- "xenial"
+subordinate: true
 provides:
   neutron-plugin-api-subordinate:
     interface: neutron-plugin-api-subordinate
     scope: container
 requires:
   container:
-    interface: juju-info
+    interface: neutron-plugin-api
     scope: container

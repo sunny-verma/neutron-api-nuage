@@ -5,15 +5,14 @@ import charmhelpers.core.hookenv as hookenv
 import charmhelpers.contrib.network.ip as ch_ip
 import charms_openstack.charm
 import charmhelpers.contrib.openstack.utils as ch_utils
-
 import charms_openstack.adapters
 from charmhelpers.fetch import (
     apt_install,
     add_source,
     apt_update,
 )
-
-ML2_CONF = '/etc/neutron/plugins/ml2/ml2_conf.ini'
+ML2_DIR = '/etc/neutron/plugins/ml2/'
+ML2_CONF = ML2_DIR + 'ml2_conf.ini'
 VXLAN = 'vxlan'
 NUAGE_PACKAGES = ['nuage-openstack-neutron', 'nuage-openstack-neutronclient']
 
@@ -33,11 +32,6 @@ class QueensNeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
     # List of packages to install for this charm
     packages = NUAGE_PACKAGES
     
-    # File permissions
-    # config files written with 'group' read permission but always
-    # owned by root.
-    user = 'root'
-    group = 'neutron'
 
     restart_map = {ML2_CONF: ['neutron-server']}
     adapters_class = charms_openstack.adapters.OpenStackRelationAdapters
@@ -45,11 +39,13 @@ class QueensNeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
     #required_relations = ['neutron-plugin-api-subordinate']
 
     service_plugins = hookenv.config('nuage-service-plugins')
+    group = 'neutron'
 
     def configure_plugin(self, api_principle):
         """Add sections and tuples to insert values into neutron-server's
         neutron.conf
         """
+        self.group = 'neutron'
         inject_config = {
             "neutron-api": {
                 "/etc/neutron/neutron.conf": {
@@ -72,6 +68,7 @@ class QueensNeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
         '''
         Install hook is run when the charm is first deployed on a node.
         '''
+        self.group = 'neutron'
         add_source(hookenv.config('extra-source'), hookenv.config('extra-key'))
         apt_update()
         pkgs =NUAGE_PACKAGES

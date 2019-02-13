@@ -39,13 +39,19 @@ class QueensNeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
     #required_relations = ['neutron-plugin-api-subordinate']
 
     service_plugins = hookenv.config('nuage-service-plugins')
-    group = 'neutron'
+
+    @property
+    def neutron_user(self):
+        return self.user
+
+    @property
+    def neutron_group(self):
+        return self.group
 
     def configure_plugin(self, api_principle):
         """Add sections and tuples to insert values into neutron-server's
         neutron.conf
         """
-        self.group = 'neutron'
         inject_config = {
             "neutron-api": {
                 "/etc/neutron/neutron.conf": {
@@ -68,10 +74,11 @@ class QueensNeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
         '''
         Install hook is run when the charm is first deployed on a node.
         '''
-        self.group = 'neutron'
         add_source(hookenv.config('extra-source'), hookenv.config('extra-key'))
         apt_update()
         pkgs =NUAGE_PACKAGES
         for pkg in pkgs:
             apt_install(pkg, options=['--force-yes', '--allow-unauthenticated'], fatal=True)
 
+    user = 'root'
+    group = 'neutron'

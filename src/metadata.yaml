@@ -9,6 +9,7 @@ tags:
   - openstack
 series:
 - "xenial"
+- "bionic"
 subordinate: true
 provides:
   neutron-plugin-api-subordinate:

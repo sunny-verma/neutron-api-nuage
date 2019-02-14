@@ -56,11 +56,6 @@ options:
     description: |
       Nuage extentions mechanism drivers you want to enable
 
-  security-groups:
-    default: false
-    type: boolean
-    description: Enable OVS managed security groups.
-
   vni-ranges:
     type: string
     default: '1001:2000'

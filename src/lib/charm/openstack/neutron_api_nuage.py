@@ -16,10 +16,12 @@ ML2_CONF = ML2_DIR + 'ml2_conf.ini'
 VXLAN = 'vxlan'
 NUAGE_PACKAGES = ['nuage-openstack-neutron', 'nuage-openstack-neutronclient']
 
+
 @charms_openstack.charm.register_os_release_selector
 def choose_charm_class():
     """Choose the charm class based on the neutron-common package installed"""
     return ch_utils.os_release('neutron-common')
+
 
 class QueensNeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
 
@@ -31,12 +33,10 @@ class QueensNeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
 
     # List of packages to install for this charm
     packages = NUAGE_PACKAGES
-    
-
     restart_map = {ML2_CONF: ['neutron-server']}
     adapters_class = charms_openstack.adapters.OpenStackRelationAdapters
 
-    #required_relations = ['neutron-plugin-api-subordinate']
+    # required_relations = ['neutron-plugin-api-subordinate']
 
     service_plugins = hookenv.config('nuage-service-plugins')
 
@@ -57,9 +57,9 @@ class QueensNeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
                 "/etc/neutron/neutron.conf": {
                     "sections": {
                         'DEFAULT': [
-                        ],
+                        ]
                     }
-                },
+                }
             }
         }
 
@@ -71,14 +71,17 @@ class QueensNeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
             subordinate_configuration=inject_config)
 
     def install(self):
-        '''
+        """install
+
         Install hook is run when the charm is first deployed on a node.
-        '''
+        """
+
         add_source(hookenv.config('extra-source'), hookenv.config('extra-key'))
         apt_update()
-        pkgs =NUAGE_PACKAGES
+        pkgs = NUAGE_PACKAGES
         for pkg in pkgs:
-            apt_install(pkg, options=['--force-yes', '--allow-unauthenticated'], fatal=True)
+            apt_install(pkg, options=['--force-yes',
+                                      '--allow-unauthenticated'], fatal=True)
 
     user = 'root'
     group = 'neutron'

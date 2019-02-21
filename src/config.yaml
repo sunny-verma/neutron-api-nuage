@@ -1,14 +1,15 @@
 options:
 
 # Package information
-  extra-key:
+  install_sources:
     type: string
-    default:
-    description: Optional key for archive containing additional packages.
-  extra-source:
+    default: ''
+    description: apt repository to fetch nuage from
+  install_keys:
     type: string
-    default:
-    description: Optional source for archive containing additional packages.
+    default: ''
+    description: repository key
+
 ## Neutron section
   nuage-service-plugins:
     type: string

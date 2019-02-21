@@ -1,4 +1,4 @@
-# Copyright 2019 Nuage Networks by Nokia 
+# Copyright 2019 Nuage Networks by Nokia
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ charm.use_defaults(
     'config.changed',
     'update-status')
 
+
 def exec_cmd(cmd=None, error_msg='Command exited with ERROR', fatal=False):
     '''
     Function to execute any bash command on the node.
@@ -46,7 +47,7 @@ def exec_cmd(cmd=None, error_msg='Command exited with ERROR', fatal=False):
 def db_migration():
     log("Migrating database now")
     exec_cmd(cmd=['neutron-db-manage', 'upgrade', 'heads'],
-        error_msg="db-manage command executed with errors", fatal=False)
+             error_msg="db-manage command executed with errors", fatal=False)
     log("Migrating database done")
     reactive.set_state('db.synced')
 
@@ -67,19 +68,18 @@ def configure_plugin(api_principle):
     with charm.provide_charm_instance() as neutron_api_nuage_charm:
         neutron_api_nuage_charm.configure_plugin(api_principle)
         neutron_api_nuage_charm.assess_status()
-    api_principle.request_restart()
     reactive.set_state('config.neutron_conf_rendered')
-
-
-@reactive.when_file_changed(neutron_api_nuage.ML2_CONF)
-@reactive.when('neutron-plugin-api-subordinate.connected')
-def remote_restart(api_principle):
-    api_principle.request_restart()
 
 
 @reactive.when('neutron-plugin-api-subordinate.connected')
 @reactive.when('config.neutron_conf_rendered')
 @reactive.when('config.ml2_rendered')
 @reactive.when('db.synced')
+def remote_restart(api_principle):
+    api_principle.request_restart()
+
+
+@reactive.when_file_changed(neutron_api_nuage.ML2_CONF)
+@reactive.when('neutron-plugin-api-subordinate.connected')
 def remote_restart(api_principle):
     api_principle.request_restart()

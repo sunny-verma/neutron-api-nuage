@@ -41,3 +41,4 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
 
 
 class TestSDNCharmHandles(test_utils.PatchHelper):
+    pass

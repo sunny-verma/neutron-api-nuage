@@ -45,3 +45,4 @@ class Helper(unittest.TestCase):
 
 
 class TestSDNCharm(Helper):
+    pass

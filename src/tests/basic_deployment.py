@@ -26,13 +26,15 @@ import charmhelpers.contrib.openstack.amulet.utils as os_amulet_utils
 u = os_amulet_utils.OpenStackAmuletUtils(os_amulet_utils.DEBUG)
 
 
-class NeutronApiNuageCharmDeployment(amulet_deployment.OpenStackAmuletDeployment):
+class NeutronApiNuageCharmDeployment(
+    amulet_deployment.OpenStackAmuletDeployment
+):
     """Amulet tests on a basic neutron-api-nuage deployment."""
 
     def __init__(self, series, openstack=None, source=None, stable=False):
         """Deploy the entire test environment."""
         super(NeutronApiNuageCharmDeployment, self).__init__(series, openstack,
-                                                          source, stable)
+                                                             source, stable)
         self._add_services()
         self._add_relations()
         self._configure_services()
@@ -47,7 +49,8 @@ class NeutronApiNuageCharmDeployment(amulet_deployment.OpenStackAmuletDeployment
     def _add_services(self):
         """Add services
 
-           Add the services that we're testing, where neutron-api-nuage is local,
+           Add the services that we're testing,
+           where neutron-api-nuage is local,
            and the rest of the service are from lp branches that are
            compatible with the local charm (e.g. stable or next).
            """
@@ -69,8 +72,8 @@ class NeutronApiNuageCharmDeployment(amulet_deployment.OpenStackAmuletDeployment
             {'name': 'nova-cloud-controller'},
             {'name': 'glance'},
         ]
-        super(NeutronApiNuageCharmDeployment, self)._add_services(this_service,
-                                                      other_services)
+        super(NeutronApiNuageCharmDeployment, self)._add_services(
+            this_service, other_services)
 
     def _add_relations(self):
         """Add all of the relations for the services."""
@@ -107,7 +110,8 @@ class NeutronApiNuageCharmDeployment(amulet_deployment.OpenStackAmuletDeployment
         keystone_config = {'admin-password': 'openstack',
                            'admin-token': 'ubuntutesting'}
         configs = {'keystone': keystone_config}
-        super(NeutronApiNuageCharmDeployment, self)._configure_services(configs)
+        super(NeutronApiNuageCharmDeployment, self)._configure_services(
+            configs)
 
     def _get_token(self):
         return self.keystone.service_catalog.catalog['token']['id']
@@ -115,12 +119,12 @@ class NeutronApiNuageCharmDeployment(amulet_deployment.OpenStackAmuletDeployment
     def _initialize_tests(self):
         """Perform final initialization before tests get run."""
         # Access the sentries for inspecting service units
-        self.neutron-api-nuage_sentry = self.d.sentry['neutron-api-nuage'][0]
+        self.neutron_api_nuage_sentry = self.d.sentry['neutron-api-nuage'][0]
         self.mysql_sentry = self.d.sentry['mysql'][0]
         self.keystone_sentry = self.d.sentry['keystone'][0]
         self.rabbitmq_sentry = self.d.sentry['rabbitmq-server'][0]
-        self.neutron-api-nuage_svcs = [
-            'neutron-api-nuage-agent', 'neutron-api-nuage-api']
+        self.neutron_api_nuage_svcs = [
+            'neutron-api', 'neutron-api-nuage-api']
 
         # Authenticate admin with keystone endpoint
         self.keystone = u.authenticate_keystone_admin(self.keystone_sentry,
@@ -171,7 +175,7 @@ class NeutronApiNuageCharmDeployment(amulet_deployment.OpenStackAmuletDeployment
         u.log.debug('Checking system services on units...')
 
         service_names = {
-            self.neutron-api-nuage_sentry: self.neutron-api-nuage_svcs,
+            self.neutron_api_nuage_sentry: self.neutron_api_nuage_svcs,
         }
 
         ret = u.validate_services_by_name(service_names)

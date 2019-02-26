@@ -1,14 +1,15 @@
 options:
 
 # Package information
-  extra-key:
-    type: string
-    default:
-    description: Optional key for archive containing additional packages.
   extra-source:
     type: string
-    default:
-    description: Optional source for archive containing additional packages.
+    default: ''
+    description: apt repository to fetch nuage from
+  extra-key:
+    type: string
+    default: ''
+    description: repository key
+
 ## Neutron section
   nuage-service-plugins:
     type: string
@@ -70,39 +71,85 @@ options:
       Nuage default vxlan group 
 
 #Nuage Section
-
-  vsd-cms-id:
+# [ restproxy ]
+  server:
+    type: string
+    default: 'vsd.example.com:8443'
+    description: "IP address and port of Nuage's VSD server or cluster" 
+  serverauth:
+    type: string
+    default: "csproot:csproot"
+    description: "Username and password for authentication"
+  serverssl:
+    type: boolean
+    default: True
+    description: "Boolean for SSL connection with VSD server"
+  verify-cert:
+    type: boolean
+    default: False 
+    description: |
+      Either a boolean (True or False), indicating whether
+      we verify the VSD's certificate, or a string which is
+      the local path of the VSD's PEM file or CA_BUNDLE file
+      to be verified
+  server-timeout:
+    type: int
+    default: 30
+    description: "VSD server invocation timeout" 
+  server-max-retries:
+    type: int
+    default: 5
+    description: "VSD server invocation timeout" 
+  base-uri:
+    type: string
+    default: "/nuage/api/v5_0"
+    description: "Nuage provided base uri to reach out to VSD" 
+  organization:
+    type: string
+    default: csp
+    description: |
+      Organization name in which VSD will orchestrate
+      network resources using openstack
+  auth-resource:
+    type: string
+    default: "/me"
+    description: "Nuage provided uri for initial authorization to access VSD"
+  default-net-partition-name:
+    type: string
+    default: juju-enterprise
+    description: |
+      Default Network partition in which VSD will 
+      orchestrate network resources using openstack 
+  nuage-pat:
+    type: string
+    default: "default_disabled"
+    description: "" 
+  nuage-underlay-default:
+    type: string
+    default: "off"
+    description: "" 
+  nuage-fip-underlay:
+    type: boolean
+    default: False 
+    description: "" 
+  cms-id:
     type: string
     default:
     description: |
       CMS ID is used as an authentication token from VSD to CMS.
       This value is being generated via nuage scripts and can be set pre/post
       deployment.
-  vsd-server:
+  nuage-uplink:
     type: string
-    default:
-    description: Nuage VSD Server
-  vsd-auth:
+    default: "" 
+    description: 
+
+# [plugin]
+  experimental-features:
     type: string
-    default: "csproot:csproot"
-    description: Username Password to connect to Nuage VSD Server
-  vsd-organization:
+    default: "" 
+    description: 
+  enable-debug:
     type: string
-    default: csp
-    description: Name of the organization in Nuage VSD
-  vsd-auth-ssl:
-    type: boolean
-    default: True
-    description: SSL authentication of the Nuage VSD Server
-  vsd-base-uri:
-    type: string
-    default: "/nuage/api/v5_0"
-    description: Nuage VSD API endpoint URI
-  vsd-auth-resource:
-    type: string
-    default: "/me"
-    description: Nuage VSD authentication resource
-  vsd-netpart-name:
-    type: string
-    default: juju-enterprise
-    description: Name of the Organization or Enterprise to create in Nuage VSD
+    default: "" 
+    description: "" 

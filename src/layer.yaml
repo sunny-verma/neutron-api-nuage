@@ -1,4 +1,6 @@
-includes: ['layer:openstack', 'interface:neutron-plugin-api-subordinate']
+includes:
+  - 'layer:openstack'
+  - 'interface:neutron-plugin-api-subordinate'
 options:
   basic:
     use_venv: True

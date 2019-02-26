@@ -6,6 +6,7 @@ import charmhelpers.contrib.network.ip as ch_ip
 import charms_openstack.charm
 import charmhelpers.contrib.openstack.utils as ch_utils
 import charms_openstack.adapters
+from charmhelpers.fetch.ubuntu import import_key
 from charmhelpers.fetch import (
     apt_install,
     add_source,
@@ -75,8 +76,9 @@ class QueensNeutronApiNuageCharm(charms_openstack.charm.OpenStackCharm):
 
         Install hook is run when the charm is first deployed on a node.
         """
-
-        add_source(hookenv.config('extra-source'), hookenv.config('extra-key'))
+        
+        import_key(hookenv.config('extra-key'))
+        add_source(hookenv.config('extra-source'))
         apt_update()
         pkgs = NUAGE_PACKAGES
         for pkg in pkgs:

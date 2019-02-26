@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import charms_openstack.charm as charm
 import charms.reactive as reactive
 from charmhelpers.core.hookenv import (
@@ -42,26 +41,6 @@ def exec_cmd(cmd=None, error_msg='Command exited with ERROR', fatal=False):
             log(error_msg)
 
 
-@reactive.when('config.ml2_rendered')
-@reactive.when_not('db.synced')
-def db_migration():
-    log("Migrating database now")
-    exec_cmd(cmd=['neutron-db-manage', 'upgrade', 'heads'],
-             error_msg="db-manage command executed with errors", fatal=False)
-    log("Migrating database done")
-    reactive.set_state('db.synced')
-
-
-@reactive.when('neutron-plugin-api-subordinate.connected')
-@reactive.when('config.neutron_conf_rendered')
-@reactive.when_not('config.ml2_rendered')
-def render_config(*args):
-    with charm.provide_charm_instance() as neutron_api_nuage_charm:
-        neutron_api_nuage_charm.render_with_interfaces(args)
-        neutron_api_nuage_charm.assess_status()
-    reactive.set_state('config.ml2_rendered')
-
-
 @reactive.when('neutron-plugin-api-subordinate.connected')
 @reactive.when_not('config.neutron_conf_rendered')
 def configure_plugin(api_principle):
@@ -72,14 +51,29 @@ def configure_plugin(api_principle):
 
 
 @reactive.when('neutron-plugin-api-subordinate.connected')
-@reactive.when('config.neutron_conf_rendered')
+def render_config(*args):
+    with charm.provide_charm_instance() as neutron_api_nuage_charm:
+        neutron_api_nuage_charm.render_with_interfaces(args)
+        neutron_api_nuage_charm.assess_status()
+    reactive.set_state('config.ml2_rendered')
+
 @reactive.when('config.ml2_rendered')
-@reactive.when('db.synced')
-def remote_restart(api_principle):
-    api_principle.request_restart()
+@reactive.when_not('db.synced')
+def db_migration():
+    log("Migrating database now")
+    exec_cmd(cmd=['neutron-db-manage', 'upgrade', 'heads'],
+             error_msg="db-manage command executed with errors", fatal=False)
+    log("Migrating database done")
+    reactive.set_state('db.synced')
+    reactive.set_state('neutron.restart')
 
 
 @reactive.when_file_changed(neutron_api_nuage.ML2_CONF)
+def file_changed():
+    reactive.set_state('neutron.restart')
+
 @reactive.when('neutron-plugin-api-subordinate.connected')
+@reactive.when('neutron.restart')
 def remote_restart(api_principle):
     api_principle.request_restart()
+    reactive.remove_state('neutron.restart')
